@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Text;
 using Content.Encoder;
 
-namespace ContentUnitTesting
+namespace ContentUnitTesting.ContentTest
 {
     /// <summary>
     /// Class to test the IFileEncoder interface
@@ -24,9 +24,9 @@ namespace ContentUnitTesting
         private string _testDirectory;
 
         [TestInitialize]
-        public void TestInitialize() 
+        public void TestInitialize()
         {
-            _testDirectory = Directory.GetParent( Environment.CurrentDirectory ).Parent.Parent.FullName;
+            _testDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace ContentUnitTesting
         [TestMethod]
         public void GetEncoded_ReturnsValidXMLString()
         {
-            
+
             // Define the list of test file names (assuming they are already in the TestDlls directory)
             var testFileNames = new List<string>
             {
@@ -45,13 +45,13 @@ namespace ContentUnitTesting
             var encoder = new DLLEncoder();
 
             // Create a list of file paths based on the files you've copied or created
-            var filePaths = testFileNames.Select( fileName => Path.Combine( _testDirectory , fileName ) ).ToList();
+            var filePaths = testFileNames.Select(fileName => Path.Combine(_testDirectory, fileName)).ToList();
 
             // Act
-            string encodedXML = encoder.GetEncoded( filePaths, "Test1");
+            string encodedXML = encoder.GetEncoded(filePaths, "Test1");
 
             // Assert
-            Assert.IsFalse( string.IsNullOrEmpty( encodedXML ) );
+            Assert.IsFalse(string.IsNullOrEmpty(encodedXML));
         }
 
         /// <summary>
@@ -70,39 +70,39 @@ namespace ContentUnitTesting
                 "Testdlls/Content.dll"
             };
 
-            var filePaths = testFileNames.Select( fileName => Path.Combine( _testDirectory , fileName ) ).ToList();
+            var filePaths = testFileNames.Select(fileName => Path.Combine(_testDirectory, fileName)).ToList();
 
             // Save the file paths and content into a dictionary before encoding
-            Dictionary<string , string> dataBeforeEncoding = new();
+            Dictionary<string, string> dataBeforeEncoding = new();
             foreach (string filePath in filePaths)
             {
-                Trace.WriteLine( filePath );
+                Trace.WriteLine(filePath);
                 //Assert.IsTrue( false , filePath );
-                string content = File.ReadAllText( filePath, Encoding.UTF8 );
+                string content = File.ReadAllText(filePath, Encoding.UTF8);
                 dataBeforeEncoding[filePath] = content;
             }
 
             // Act
-            string encodedXML = encoder.GetEncoded( filePaths, "Test2");
+            string encodedXML = encoder.GetEncoded(filePaths, "Test2");
 
-            Assert.IsFalse( string.IsNullOrEmpty( encodedXML ),
+            Assert.IsFalse(string.IsNullOrEmpty(encodedXML),
                 "Encoded XML is empty");
 
             // Decode the XML back to file paths
-            encoder.DecodeFrom( encodedXML );
-            Dictionary<string , string> decodedData = encoder.GetData();
+            encoder.DecodeFrom(encodedXML);
+            Dictionary<string, string> decodedData = encoder.GetData();
 
             // Assert
-            CollectionAssert.AreEqual( dataBeforeEncoding.Keys , decodedData.Keys );
+            CollectionAssert.AreEqual(dataBeforeEncoding.Keys, decodedData.Keys);
             Assert.AreEqual(encoder.sessionID, "Test2");
             foreach (string filePath in filePaths)
             {
-                Assert.IsTrue( decodedData.ContainsKey( filePath ) );
-                Assert.AreEqual( dataBeforeEncoding[filePath] , decodedData[filePath] );
+                Assert.IsTrue(decodedData.ContainsKey(filePath));
+                Assert.AreEqual(dataBeforeEncoding[filePath], decodedData[filePath]);
             }
 
         }
 
     }
-    
+
 }

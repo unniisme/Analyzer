@@ -12,7 +12,7 @@
 using Content.FileHandling;
 using Networking.Communicator;
 
-namespace ContentUnitTesting
+namespace ContentUnitTesting.ContentTest
 {
     /// <summary>
     /// Class to test interface IFileHandler
@@ -32,22 +32,22 @@ namespace ContentUnitTesting
         [TestMethod]
         public void FileFindingTest()
         {
-            string tempDirectory = Path.Combine( Path.GetTempPath() , Path.GetRandomFileName() );
-            Directory.CreateDirectory( tempDirectory );
-            File.WriteAllText( Path.Combine( tempDirectory , "TestDll1.dll" ) , "DLL Content 1" );
-            File.WriteAllText( Path.Combine( tempDirectory , "TestDll2.dll" ) , "DLL Content 2" );
-            Directory.CreateDirectory( tempDirectory + "\\subdir1" );
-            File.WriteAllText( Path.Combine( tempDirectory+"\\subdir1" , "TestDll3.dll" ) , "DLL Content 3" );
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll2.dll"), "DLL Content 2");
+            Directory.CreateDirectory(tempDirectory + "\\subdir1");
+            File.WriteAllText(Path.Combine(tempDirectory + "\\subdir1", "TestDll3.dll"), "DLL Content 3");
 
             IFileHandler fileHandler = new FileHandler(_fileSender);
-            fileHandler.Upload( tempDirectory , "TestSessionId" );
+            fileHandler.Upload(tempDirectory, "TestSessionId");
             List<string> filesList = fileHandler.GetFiles();
-            Assert.AreEqual( filesList[0] , tempDirectory + "\\TestDll1.dll" );
-            Assert.AreEqual( filesList[2] , tempDirectory + "\\subdir1" + "\\TestDll3.dll" );
+            Assert.AreEqual(filesList[0], tempDirectory + "\\TestDll1.dll");
+            Assert.AreEqual(filesList[2], tempDirectory + "\\subdir1" + "\\TestDll3.dll");
 
-            Console.WriteLine(filesList[1] );
+            Console.WriteLine(filesList[1]);
             // Clean up the temporary directory and files
-            Directory.Delete( tempDirectory , true );
+            Directory.Delete(tempDirectory, true);
         }
 
         /// <summary>

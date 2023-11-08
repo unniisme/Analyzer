@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ContentUnitTesting
+namespace ContentUnitTesting.ContentTest
 {
     public class MockCommunicator : ICommunicator
     {
