@@ -18,6 +18,9 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Analyzer;
 using Content.Model;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using System;
 
 namespace ContentPage
 {
@@ -105,6 +108,42 @@ namespace ContentPage
         {
             _viewModel.SendToCloud();
         }
+
+        /// <summary>
+        /// Event handler for the "Show Class Diagram" button click.
+        /// Displays the class diagram image in a new window if the image path is available in the ClientServerViewModel.
+        /// If the path is not available, shows a message to the user indicating the unavailability of the class diagram.
+        /// </summary>
+        /// <param name="sender">The button that triggered the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void ShowClassDiagramButton_Click( object sender , RoutedEventArgs e )
+        {
+            string classDiagramPath = _viewModel.ClassDiagramImagePath; // Access the path from the view model
+
+            if (!string.IsNullOrEmpty( classDiagramPath ))
+            {
+                Window diagramWindow = new()
+                {
+                    Title = "Class Diagram" ,
+                    Width = 600 ,
+                    Height = 400 ,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
+                Image diagramImage = new();
+                BitmapImage bitmapImage = new( new Uri( classDiagramPath , UriKind.RelativeOrAbsolute ) );
+                diagramImage.Source = bitmapImage;
+
+                diagramWindow.Content = diagramImage;
+
+                diagramWindow.ShowDialog();
+            }
+            else
+            {
+                System.Windows.MessageBox.Show( "Class diagram image path is not available." ); // Show a message if the path is not available
+            }
+        }
+
     }
 }
 
